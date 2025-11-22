@@ -16,7 +16,6 @@ import (
 
 const (
 	configFilePath = "config/local.yaml"
-	envFilePath    = ".env"
 )
 
 func main() {
@@ -25,10 +24,6 @@ func main() {
 
 	logger.Init()
 	cfg := config.New()
-	if err := cfg.LoadEnvFiles(envFilePath); err != nil {
-		logger.Logger.Fatal().Err(err).Msg("failed to load env file")
-	}
-	cfg.EnableEnv("")
 	if err := cfg.LoadConfigFiles(configFilePath); err != nil {
 		logger.Logger.Fatal().Err(err).Msg("failed to load config file")
 	}
@@ -36,7 +31,7 @@ func main() {
 	srvsAn := serviceAn.New()
 	handAn := handlerAn.New(srvsAn)
 
-	router := server.NewRouter(cfg, handAn)
+	router := server.NewRouter(handAn)
 	srv := server.NewServer(cfg.GetString("server.port"), router)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {

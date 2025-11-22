@@ -4,11 +4,10 @@ import (
 	"net/http"
 
 	"github.com/avraam311/analysis-utility/internal/api/http/handlers/analysis"
-	"github.com/avraam311/analysis-utility/internal/infra/config"
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter(cfg *config.Config, handlerAn *analysis.Handler) *gin.Engine {
+func NewRouter(handlerAn *analysis.Handler) *gin.Engine {
 	e := gin.Default()
 
 	anGroup := e.Group("/analysis")

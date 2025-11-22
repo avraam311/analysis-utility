@@ -5,12 +5,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	internalProm "github.com/avraam311/analysis-utility/internal/infra/prometheus"
 )
 
 func NewRouter() *gin.Engine {
-	e := gin.Default()
+	e := gin.New()
+	e.Use(gin.Recovery(), gin.Logger())
 
-	e.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	e.GET("/metrics", gin.WrapH(promhttp.HandlerFor(internalProm.Registry, promhttp.HandlerOpts{})))
 
 	return e
 }

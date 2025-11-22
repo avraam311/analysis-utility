@@ -16,6 +16,7 @@ RUN mkdir -p /app/logs
 
 COPY --from=build_base ./app .
 COPY ./config ./config
-COPY ./.env .
+
+EXPOSE 8080
 
 CMD ["./app"]

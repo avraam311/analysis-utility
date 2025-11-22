@@ -1,8 +1,10 @@
 package domain
 
+import "time"
+
 type Analysis struct {
-	AllocsNum  string `json:"allocs_num" binding:"required"`
-	GCNum      string `json:"gc_num" binding:"required"`
-	UsedMemory string `json:"used_memory" binding:"required"`
-	GCLastTime string `json:"gc_last_time" binding:"required"`
+	AllocsNum  uint64      `json:"allocs_num" binding:"required"`
+	GCNum      uint32      `json:"gc_num" binding:"required"`
+	UsedMemory uint64      `json:"used_memory" binding:"required"`
+	GCLastTime time.Time `json:"gc_last_time" binding:"required"`
 }

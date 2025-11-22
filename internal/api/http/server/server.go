@@ -3,17 +3,14 @@ package server
 import (
 	"net/http"
 
-	"github.com/avraam311/analysis-utility/internal/api/http/handlers/analysis"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func NewRouter(handlerAn *analysis.Handler) *gin.Engine {
+func NewRouter() *gin.Engine {
 	e := gin.Default()
 
-	anGroup := e.Group("/analysis")
-	{
-		anGroup.GET("/get", handlerAn.GetAnalysis)
-	}
+	e.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	return e
 }

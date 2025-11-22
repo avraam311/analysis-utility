@@ -7,11 +7,10 @@ import (
 	"syscall"
 	"time"
 
-	handlerAn "github.com/avraam311/analysis-utility/internal/api/http/handlers/analysis"
 	"github.com/avraam311/analysis-utility/internal/api/http/server"
 	"github.com/avraam311/analysis-utility/internal/infra/config"
 	"github.com/avraam311/analysis-utility/internal/infra/logger"
-	serviceAn "github.com/avraam311/analysis-utility/internal/service/analysis"
+	"github.com/avraam311/analysis-utility/internal/infra/prometheus"
 )
 
 const (
@@ -22,16 +21,14 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
+	prometheus.Init()
 	logger.Init()
 	cfg := config.New()
 	if err := cfg.LoadConfigFiles(configFilePath); err != nil {
 		logger.Logger.Fatal().Err(err).Msg("failed to load config file")
 	}
 
-	srvsAn := serviceAn.New()
-	handAn := handlerAn.New(srvsAn)
-
-	router := server.NewRouter(handAn)
+	router := server.NewRouter()
 	srv := server.NewServer(cfg.GetString("server.port"), router)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
